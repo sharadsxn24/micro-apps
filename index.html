@@ -1,8 +1,536 @@
-<html>
+<!DOCTYPE html>
+<html >
+
 <head>
-<title>Hello </title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Weather PWA">
+  <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+  <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#2F3BA2">
+    <title>Cricket</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/font.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/cards.css">
+
 
 </head>
-<body>hello
+
+<body  data-platform-version="{{#platform_version}}{{platform_version}}{{/platform_version}}" data-app-type="NM">
+
+
+
+    <div id="loadingScreen" class="splash" >
+        <div class="splash__main" >
+            <img width="53" src="assets/images/icon.png" />
+            <div class="title">Cricket
+            </div>
+            <div id="quoteCricket" class="subtitle">
+            </div>
+          <div class="alignCenter play">
+            <img class="" src="assets/images/spinner.png" />
+          </div>
+
+
+        </div>
+    </div>
+
+    <div id="splashScreen" class="splash splashScreen">
+        <div class="splash__main" >
+            <img width="53" src="assets/images/icon.png" />
+            <div class="title">Cricket on hike
+            </div>
+            <div class="subtitle">{{title1}} <span class="bold">{{boldText}}</span> {{title2}}
+            </div>
+            <div class="cta ">
+                <span class="tapping" onclick="cricketapp.callSubscribe();" >AWESOME    
+                </span>
+            </div>
+             <div class="ctaNo">
+                <span class="" onclick="cricketapp.callUnSubscribe();" >I’m not interested
+                </span>
+            </div>
+
+
+        </div>
+    </div>
+    <div id="blockScreen" class="splash blockScreen" >
+        <div class="splash__main" >
+            <img width="56" src="assets/images/block_icon.png" />
+            <div class="title">Cricket is blocked
+            </div>
+            <div class="subtitle">Dont miss a single match with the latest scores, news and results only on hike Cricket!
+            </div>
+            <div class="cta ">
+                <span class="tapping" onclick="cricketapp.callUnBlock();" >UnBlock    
+                </span>
+            </div>
+       
+
+
+        </div>
+    </div>
+        <div id="offlineScreen" class="splash offlineScreen">
+        <div class="splash__main" >
+            <img width="56" src="assets/images/nointernet.png" />
+            <div class="title">No Internet Access
+            </div>
+            <div class="subtitle">Try turning on your wifi or Mobile Data to continue checking cricket updates
+            </div>
+            <div class="cta ">
+                <span class="tapping" onclick="cricketapp.init(true);">Retry    
+                </span>
+            </div>
+       
+
+
+        </div>
+    </div>
+    <div id="content" class="container" >
+        <div class="view list-view">
+            <div class="swipecontainer">
+                <div id="slider" class="swipe">
+                    <div class='swipe-wrap'>
+
+                    </div>
+
+
+                    <div class="counter content" style="display: none;">
+                        <ul id="position">
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <div class="commonDv">
+
+    <div class="containerTabs">
+        <div class="comp__tabs clearfix">
+            <a class="comp__tab selected" data-id="news">NEWS</a>
+            <a class="comp__tab " data-id="fixtures">FIXTURES</a>
+            <a class="comp__tab" data-id="results">RESULTS</a>
+          </div>
+          <div class="comp__data">
+            <div id="sliderTabs" class="swipe">
+                <div class="swipe-wrap">
+                    <div class="news_data tab-data" data-id="news">
+                       <div class="errorMessage">Unable to load news.</div> 
+                    </div>
+                     <div class="fixtures_data tab-data " data-id="fixtures">
+
+                        <div class="errorMessage">Unable to load fixtures.</div>
+
+                    </div>
+                     <div class="fixtures_data results_data tab-data " data-id="results">
+                        <div class="errorMessage">Unable to load results.</div>
+
+                    </div>
+
+                </div>
+            
+
+
+          </div>
+
+        </div>
+    </div>
+
+            </div>
+
+
+        </div>
+        <div class="view details-view">
+
+        
+        </div>
+        <div id="offlineStrip" class="offlineStrip">No Internet Connection</div>
+    </div>
+    <script id="news_data" type="text/tmpl">
+
+        <div class="item clearfix" onclick="cricketapp.openFullPage(this,true)" data-ts="<%=published_ts%>" data-source = "<%=source%>" data-id="<%=id%>" data-cat="news" href="<%=url%>" data-title="<%=title%>">
+            <img onerror="cricketapp.imageError(this);" class="newsImage" class="left" src="<%=thumbnailurl%>" width="54" height="54" />
+            <div class="inlineBlock">
+                <div class="title"><%=title%></div>
+                <div class="subtitle"><span class="source"><%=source%></span>
+                    <span><%=ts%></span>
+                </div>
+            </div>
+
+
+        </div>
+    </script>
+    <script id="liveCard" type="text/tmpl">
+    <div class="cardLiveP" style="background-color: #009cd3;padding: 0px 16px;">
+        <div class="card cardlive cricket-card" data-cat="match" data-ts="" data-source = "match_id" data-id="<%=matchId%>" href="<%=matchURL%>" data-title="<%=title%>" data-matchid="<%=matchId%>">
+            <div class="cardIntro row ">
+                <div class="cardHeader">
+                    <div class="title">
+                        <% if (actualState == "live" && state !="stump"){ %>   <span class="liveText">Live</span>  <%}%>
+                        <% if (actualState == "live"  && state =="stump"){ %>   <span class="liveText">Stumps</span>  <%}%>
+
+
+                        <%=title%>
+                    </div>
+
+                    <% if (actualState == "fixture"){ %>     <div class="subtitle"><%=place%>
+                    </div>  <%}%>
+
+                 
+
+                </div>
+                <div class="matchBetween clearfix clickableArea">
+                    <div class="column column--48">
+                        <div class="clearfix">
+                            <img height="36" onerror="cricketapp.flagError(this,true)" data-src="<%=team1.flagImage%>" class="left" src="<%=basePath%>assets/images/<%=team1.name%>.png" />
+                            <div class="teamName">
+                                <%=team1.name%>
+                            </div>
+                        </div>
+                             <% if (actualState != "fixture"){ %>  
+                        <div class="scoreFinal alignLeft  <% if (team1.current == true && actualState !='result'){ %> currentTeam  <%}%>"> 
+                            <div class="teamScore">
+                                <%=team1.score%>
+                            </div>
+                            <span class="teamOvers">
+                                <%=team1.overs%>
+                            </span>
+                        </div>
+                         <%}%>
+
+                    </div>
+                    <div class="column column--48">
+                        <div class="clearfix">
+                            <img height="36" onerror="cricketapp.flagError(this,true)" data-src="<%=team2.flagImage%>"  class="right" src="<%=basePath%>assets/images/<%=team2.name%>.png" />
+                            <div class="teamNameRight right">
+                                <%=team2.name%>
+                            </div>
+                        </div>
+                        <% if (actualState!= "fixture"){ %>  
+
+                        <div class=" scoreFinal alignRight <% if (team2.current == true && actualState !='result'){ %> currentTeam  <%}%>">
+                            <span class="teamOvers">
+                               <%=team2.overs%>
+                            </span>
+                            <div class="teamScore">
+                                <%=team2.score%>
+                            </div>
+                        </div>
+                        <%}%>
+
+
+                    </div>
+                </div>
+                <div id="status" class="status">
+                    <%=status%>
+                </div>
+             
+
+
+            </div>
+   <div class="alignRight" style="padding: 0px 8px 8px;font-size: 0px;"><img width="60" src="<%=basePath%>assets/images/cricbuzz-logo.png" /></div>
+        </div>
+        </div>
+    </script>
+
+    <script id="fixtureCard" type="text/tmpl">
+        <div class="item" onclick="cricketapp.openFullPage(this)" data-cat="fixtures" data-ts="" data-source = "match_id" data-id="<%=matchId%>"  href="<%=matchURL%>" data-title="<%=title%>">
+            <div class="inlineBlock vTop">  
+                <div class="inlineBlock date">
+                    <div class="day">
+                        <%=day%>
+                    </div>
+                    <div class="month">
+                        <%=month%>
+                    </div>
+                </div>
+                <div class="dayName"><%=dayName%></div>
+            </div>
+            <div class="inlineBlock card cricket-card">
+                <div class="cardIntro row ">
+                    <div class="cardHeader">
+                        <div class="title">
+                            <%=title%>
+                        </div>
+
+                    </div>
+                    <div class="matchBetween clearfix clickableArea">
+                        <div class="column column--48">
+                            <div class="clearfix">
+                                <img onerror="cricketapp.flagError(this)" data-src="<%=team1.flagImage%>"  class="left" src="<%=basePath%>assets/images/<%=team1.name%>.png" />
+                                <div class="teamName">
+                                    <%=team1.name%>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="column column--48">
+                            <div class="clearfix">
+                                <img onerror="cricketapp.flagError(this)" data-src="<%=team2.flagImage%>"  class="right" src="<%=basePath%>assets/images/<%=team2.name%>.png" />
+                                <div class="teamNameRight right">
+                                    <%=team2.name%>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="status">
+                        <%=status%>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </script>
+    <script id="resultCard" type="text/tmpl">
+        <div class="item" onclick="cricketapp.openFullPage(this)" data-cat="results" data-ts="" data-source = "match_id" data-id="<%=matchId%>"  href="<%=matchURL%>" data-title="<%=title%>">
+            <div class="inlineBlock vTop">  
+                <div class="inlineBlock date">
+                    <div class="day">
+                        <%=day%>
+                    </div>
+                    <div class="month">
+                        <%=month%>
+                    </div>
+                </div>
+                <div class="dayName"><%=dayName%></div>
+            </div>
+            <div class="inlineBlock card cricket-card">
+                <div class="cardIntro row ">
+                    <div class="cardHeader">
+                        <div class="title">
+                            <%=title%>
+                        </div>
+
+                    </div>
+                    <div class="matchBetween clearfix clickableArea">
+                        <div class="column column--48">
+                            <div class="clearfix">
+                                <img onerror="cricketapp.flagError(this)" data-src="<%=team1.flagImage%>"  class="left" src="<%=basePath%>assets/images/<%=team1.name%>.png" />
+                                <div class="teamName">
+                                    <%=team1.name%>
+                                </div>
+                            </div>
+                               
+                                <div class="scoreFinal alignLeft  "> 
+                                    <div class="teamScore">
+                                        <%=team1.score%>
+                                    </div>
+                                    <span class="teamOvers">
+                                        <%=team1.overs%>
+                                    </span>
+                                </div>
+
+                        </div>
+                        <div class="column column--48">
+                            <div class="clearfix">
+                                <img onerror="cricketapp.flagError(this)" data-src="<%=team2.flagImage%>"  class="right" src="<%=basePath%>assets/images/<%=team2.name%>.png" />
+                                <div class="teamNameRight right">
+                                    <%=team2.name%>
+                                </div>
+                            </div>
+
+                            <div class=" scoreFinal alignRight ">
+                                <span class="teamOvers">
+                                   <%=team2.overs%>
+                                </span>
+                                <div class="teamScore">
+                                    <%=team2.score%>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="status">
+                        <%=status%>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </script>
+    <script id="miniScoreCard" type="text/tmpl">
+
+            <div class="card cardlive cricket-card livescoreCard" id="scoredetailCard" data-matchid="<%=matchId%>">
+                <div class="cardIntro row ">
+                    <div class="cardHeader">
+                        <div class="title">
+
+                        <% if (actualState == "live" && state !="stump"){ %>   <span class="liveText">Live</span>  <%}%>
+                        <% if (actualState == "live"  && state =="stump"){ %>   <span class="liveText">Stumps</span>  <%}%>
+                         <%=title%>
+                        </div>
+                        <div class="subtitle"><%=place%>
+                        </div>
+
+                    </div>
+                    <div class="matchBetween clearfix clickableArea" data-href="<%=matchURL%>">
+                        <div class="column column--48">
+                            <div class="clearfix">
+                                <img onerror="cricketapp.flagError(this,true)" data-src="<%=team1.flagImage%>"  class="left" src="<%=basePath%>assets/images/<%=team1.name%>.png" />
+                                <div class="teamName"><%=team1.name%></div>
+                            </div>
+                            <% if (actualState!= "fixture"){ %>  
+
+                            <div class="scoreFinal alignLeft  <% if (team1.current == true && actualState !='result'){ %> currentTeam  <%}%>"> 
+                                <div class="teamScore">
+                                    <%=team1.score%>
+                                </div>
+                                <span class="teamOvers">
+                                    <%=team1.overs%>
+
+                            </span>
+                            </div>
+                            <%}%>
+
+
+                        </div>
+                        <div class="column column--48">
+                            <div class="clearfix">
+                                <img onerror="cricketapp.flagError(this,true)" data-src="<%=team2.flagImage%>"  class="right" src="<%=basePath%>assets/images/<%=team2.name%>.png" />
+                                <div class="teamNameRight right"><%=team2.name%></div>
+                            </div>
+                            <% if (actualState!= "fixture"){ %>  
+
+                            <div class=" scoreFinal alignRight  <% if (team2.current == true && actualState !='result'){ %> currentTeam  <%}%>"> 
+                                <span class="teamOvers">
+                               <%=team2.overs%>
+                            </span>
+                                <div class="teamScore">
+                               <%=team2.score%>
+                                </div>
+                            </div>
+                            <%}%>
+
+
+                        </div>
+                    </div>
+                    <div id="status" class="status"> <%=status%></div>
+
+
+                    <span id="refresh" onclick="cricketapp.refreshScore(this)" data-matchid="<%=matchId%>" class="icon-cog tap" >
+                <img src=" <%=basePath%>assets/images/refresh.png"></span>
+                </div>
+                <div class="borderCard">
+                </div>
+                            <% if ( actualState =="fixture"){ %>
+                                <div id="matchStatus" style="font-size: 12px; color: #474747;padding-left: 22px;"> Match has not yet started.
+                                </div>
+                            <%}%>
+                             <% if ( actualState !="fixture"){ %>
+
+                             <div id="loadingFullScore" class="alignCenter play" style="margin-top: 30px;">
+                                    <img class="" src="assets/images/spinner.png" />
+                                </div>
+                             <%}%>
+
+
+            <% if (typeof battingScore!="undefined"){ %>
+
+                <div class="scoreCardSummary sliding-effect">
+                    <div class="tableContainer">
+                        <table class="batting">
+                            <thead>
+                                <tr class="">
+                                    <td class="">BATSMEN</td>
+                                    <td>R</td>
+                                    <td>B</td>
+                                    <td>4s</td>
+                                    <td>6s</td>
+                                    <td>SR</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="">
+                                    <td class="playing currentPlayer"><%=battingScore.first.name%>*</td>
+
+                                    <td><%=battingScore.first.runs%></td>
+                                    <td><%=battingScore.first.balls%></td>
+                                    <td><%=battingScore.first.fours%></td>
+                                    <td><%=battingScore.first.sixes%></td>
+                                    <td><%=battingScore.first.SR%></td>
+                                </tr>
+                                <tr class="">
+                                    <td class="playing "><%=battingScore.second.name%></td>
+
+                                    <td><%=battingScore.second.runs%></td>
+                                    <td><%=battingScore.second.balls%></td>
+                                    <td><%=battingScore.second.fours%></td>
+                                    <td><%=battingScore.second.sixes%></td>
+                                    <td><%=battingScore.second.SR%></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                        <table class="bowling">
+                            <thead>
+                                <tr class="">
+                                    <td class="">BOWLERS</td>
+                                    <td>O</td>
+                                    <td>M</td>
+                                    <td>R</td>
+                                    <td>W</td>
+                                    <td>Econ</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="">
+                                    <td class="playing currentPlayer"><%=bowlingScore.first.name%>*</td>
+
+                                    <td><%=bowlingScore.first.overs%></td>
+                                    <td><%=bowlingScore.first.maidens%></td>
+                                    <td><%=bowlingScore.first.runs%></td>
+                                    <td><%=bowlingScore.first.wickets%></td>
+                                    <td><%=bowlingScore.first.econ%></td>
+                                </tr>
+                                <tr class="">
+                                    <td class="playing "><%=bowlingScore.second.name%></td>
+
+                                    <td><%=bowlingScore.second.overs%></td>
+                                    <td><%=bowlingScore.second.maidens%></td>
+                                    <td><%=bowlingScore.second.runs%></td>
+                                    <td><%=bowlingScore.second.wickets%></td>
+                                    <td><%=bowlingScore.second.econ%></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                       
+                    </div>
+
+                </div>
+        
+        <%}%>
+
+            </div>
+      
+            <div class="native-row">
+
+            <ul><li id="fullScoreLink" data-ts="" onclick="cricketapp.openFullPage(this)" data-source = "match_id" data-id="<%=matchId%>" data-cat="score_card" href="<%=matchURL%>" data-title="<%=title%>" class="tap getCategories"><span> Scorecard</span></li><li id="ShareFullScore" class="tap getFullStory"><span>Share</span></li><li class="tap icon-row"><span><ul style="padding: 0px"><li id="forwardFullScore" data-matchid="<%=matchId%>" class="icon-fwd"><img width="20" src="assets/images/forward.png"/></li></ul></span></li></ul>
+            </div>
+    </script>
+<script type="text/javascript">
+var basePath = "";
+</script>
+    <script language="javascript" type="text/javascript" src="assets/js/swipe.js"></script>
+
+  
+
+    <script language="javascript" type="text/javascript" src="assets/js/platformSdk.js"></script>
+
+    <script language="javascript" type="text/javascript" src="assets/js/cricket.js"></script>
+
 </body>
+
 </html>
