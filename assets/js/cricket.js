@@ -7,7 +7,7 @@ var cricketapp = {
 	checkLive: null,
 	state: 0,
 	dataLoaded: 0,
-	env: 'prod',
+	env: 'staging',
 	checkAllData: null,
 	liveData: {},
 	cache: {},
