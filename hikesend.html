@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>This is the title of Page</title>
+</head>
+<body>
+	<a class="hikeshare" href="javascript:void(0)">
+		<img src="hike-messenger-logo.jpg"/>
+	</a>
+	<script type="text/javascript">
+		(function(){
+			var hikeElem = document.querySelector('.hikeshare');
+		 	var hikeShare = function(){
+				Console.log(location.pathname);
+			};
+			hikeElem.onclick = hikeShare;
+		}());
+		
+	</script>
+</body>
+</html>
