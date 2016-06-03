@@ -1,0 +1,1 @@
+crtg_content = ''; (function(){document.cookie = 'crtg_rta=' + escape(crtg_content) + '; path=/; expires=Sun, 03 Jul 2016 07:32:35 GMT; domain=timesofindia.com';})();
