@@ -1,20 +1,22 @@
 <html>
 <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>This is the title of Page</title>
+	<style type="text/css">
+		.hikeshare img{
+			width: 50%;
+			display: block;
+		    max-width: 300px;
+		    margin: 200px auto 0;
+		}
+	</style>
 </head>
 <body>
 	<a class="hikeshare" href="javascript:void(0)">
 		<img src="hike-messenger-logo.jpg"/>
 	</a>
-	<script type="text/javascript">
-		(function(){
-			var hikeElem = document.querySelector('.hikeshare');
-		 	var hikeShare = function(){
-				Console.log(location.pathname);
-			};
-			hikeElem.onclick = hikeShare;
-		}());
-		
-	</script>
+	<script type="text/javascript" src="hikesend.js"></script>
 </body>
 </html>
