@@ -7,7 +7,7 @@ var cricketapp = {
 	checkLive: null,
 	state: 0,
 	dataLoaded: 0,
-	env: 'prod',
+	env: 'staging',
 	checkAllData: null,
 	liveData: {},
 	cache: {},
@@ -44,14 +44,14 @@ var cricketapp = {
 		// 	cricketapp.env = "prod";
 		// }
 		if (cricketapp.env == "prod"){
-			var domain = 'http://content.app.hike.in';
-			var subscribeDomain = "http://subscription.platform.hike.in";
-			var cricketURL = "http://platform.hike.in/cricket/v1/";
+			var domain = 'https://content.app.hike.in';
+			var subscribeDomain = "https://subscription.platform.hike.in";
+			var cricketURL = "https://platform.hike.in/cricket/v1/";
 			
 		} else {
-			var domain = 'http://stagingcontent.app.hike.in';
-			var subscribeDomain = "http://qa-content.hike.in";
-			var cricketURL = "http://staging.platform.hike.in/cricket/v1/";
+			var domain = 'https://stagingcontent.app.hike.in';
+			var subscribeDomain = "https://qa-content.hike.in";
+			var cricketURL = "https://staging.platform.hike.in/cricket/v1/";
 
 		}
 		
