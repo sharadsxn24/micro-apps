@@ -18,7 +18,7 @@
 		    if (new Date().valueOf() - now > 100) return;
 		    // window.location = "https://play.google.com/store/apps/details?id=com.bsb.hike";
 		    window.location = "http://get.hike.in/";
-		}, 50);
+		}, 200);
 		
 		window.location = url;
 
